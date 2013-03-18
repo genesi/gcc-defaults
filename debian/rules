@@ -98,8 +98,6 @@ REL_NO_443	:= $(shell expr $(VMINOR) - 92)$(REL_EXT)
 # gcc-defaults 1.93 is the first version with 4.4.4 support.
 REL_NO_444	:= $(shell expr $(VMINOR) - 92)$(REL_EXT)
 
-GDC_VERSION	:= 1:1.043
-
 # minimum required gcc-X.Y versions
 REQV_295	:= (>= 1:2.95.4-16)
 REQV_296	:= 
@@ -113,7 +111,6 @@ REQV_41_GCJ	:= (>= 4.1.2-1)
 REQV_42		:= (>= 4.2.4-1)
 REQV_42_GCJ	:= (>= 4.2.4-1)
 REQV_43		:= (>= 4.3.4-1)
-REQV_43_GDC	:= (>= $(GDC_VERSION)-4.3.4-1)
 REQV_44		:= (>= 4.4.4-1)
 
 REQV_LIBGCJ_BC	:= (>= 4.4.4-1)
@@ -136,7 +133,6 @@ CV_GFORT	:= 4.4.4-$(REL_NO_444)
 CV_GCJ		:= 4.4.4-$(REL_NO_444)
 CV_GIJ		:= 4.4.4-$(REL_NO_444)
 CV_LIBGCJBC	:= 4.4.4-$(REL_NO_444)
-CV_GDC		:= 4.3.4-$(REL_NO_434)
 CV_LIBGCJCOMMON	:= 1:4.4.4-$(REL_NO_444)
 CV_SPU		:= 4.4.4-$(REL_NO_444)
 
@@ -154,13 +150,12 @@ REQV_GOBJCXX	= $(REQV_44)
 REQV_GFORT	= $(REQV_44)
 REQV_GCJ	= $(REQV_44)
 REQV_GIJ	= $(REQV_44)
-REQV_GDC	= $(REQV_43_GDC)
 REQV_SPU	= $(REQV_44)
 
 EPOCH=4
 OS_NAME	:= Linux
 distribution := $(shell lsb_release -is)
-all_packages    := g++ gfortran gcj gobjc gobjc++ gdc
+all_packages    := g++ gfortran gcj gobjc gobjc++
 all_packages	+= gcc-spu g++-spu gfortran-spu
 no_packages	:=
 
@@ -176,11 +171,6 @@ gcj_native_archs = alpha amd64 armel hppa i386 ia64 lpia mips mipsel powerpc ppc
 java_no_archs := arm 
 ifneq (,$(filter $(DEB_HOST_ARCH),$(java_no_archs)))
   no_packages += gcj gij libgcj-bc gcj-jre-headless gcj-jre gcj-jdk
-endif
-
-gdc_no_archs := sparc hurd-i386
-ifneq (,$(filter $(DEB_HOST_ARCH),$(gdc_no_archs)))
-  no_packages += gdc
 endif
 
 ifeq ($(DEB_HOST_ARCH),hurd-i386)
@@ -214,13 +204,11 @@ ifneq (,$(CV_GCJ_HACKED))
   V_GCJ	:= $(shell echo $(CV_GCJ_HACKED)   | sed 's/-[^-]*$$//')
   V_GIJ	:= $(shell echo $(CV_GIJ_HACKED)   | sed 's/-[^-]*$$//')
 endif
-V_GDC	:= $(shell echo $(CV_GDC)   | sed 's/-[^-]*$$//')
 V_SPU	:= $(shell echo $(CV_SPU)   | sed 's/-[^-]*$$//')
 
 # number for the package name
 PV_CPP	:= $(shell echo $(V_CPP)   | awk -F. '{printf "%d.%d", $$1, $$2}')
 PV_GCC	:= $(shell echo $(V_GCC)   | awk -F. '{printf "%d.%d", $$1, $$2}')
-PV_GDC	:= $(shell echo $(V_GDC)   | awk -F. '{printf "%d.%d", $$1, $$2}')
 PV_GPP	:= $(shell echo $(V_GPP)   | awk -F. '{printf "%d.%d", $$1, $$2}')
 PV_GOBJC:= $(shell echo $(V_GOBJC) | awk -F. '{printf "%d.%d", $$1, $$2}')
 PV_GOBJCXX:= $(shell echo $(V_GOBJCXX) | awk -F. '{printf "%d.%d", $$1, $$2}')
@@ -241,7 +229,6 @@ README:
 	   -DV_GFORT=$(V_GFORT) -DPV_GFORT=$(PV_GFORT) \
 	   -DV_GCJ=$(V_GCJ)     -DPV_GCJ=$(PV_GCJ) \
 	   -DV_GIJ=$(V_GIJ)     -DPV_GIJ=$(PV_GIJ) \
-	   -DV_GDC=$(V_GDC)     -DPV_GDC=$(PV_GDC) \
 	   -DV_SPU=$(V_SPU)     -DPV_SPU=$(PV_SPU) \
 	   -DGFDL \
 		debian/README.Debian.m4 > debian/README.Debian.tmp2
@@ -270,7 +257,6 @@ substvars:
 	  echo 'pv:gfort=$(PV_GFORT)'; \
 	  echo 'pv:gcj=$(PV_GCJ)'; \
 	  echo 'pv:gij=$(PV_GIJ)'; \
-	  echo 'pv:gdc=$(PV_GDC)'; \
 	  echo 'pv:spu=$(PV_SPU)'; \
 	  echo 'reqv:cpp=$(REQV_CPP)'; \
 	  echo 'reqv:gcc=$(REQV_GCC)'; \
@@ -280,7 +266,6 @@ substvars:
 	  echo 'reqv:gfort=$(REQV_GFORT)'; \
 	  echo 'reqv:gcj=$(REQV_GCJ)'; \
 	  echo 'reqv:gij=$(REQV_GIJ)'; \
-	  echo 'reqv:gdc=$(REQV_GDC)'; \
 	  echo 'reqv:spu=$(REQV_SPU)'; \
 	  echo 'pkg:libgcj=$(LIBGCJ)'; \
 	  echo 'pkg:libgcjawt=$(LIBGCJ)-awt'; \
@@ -388,30 +373,6 @@ endif
 	  /usr/share/info/gcc-$(PV_GCC).info.gz /usr/share/info/gcc.info.gz \
 	  /usr/share/info/gccint-$(PV_GCC).info.gz /usr/share/info/gccint.info.gz \
 	  /usr/share/info/libgomp-$(PV_GCC).info.gz /usr/share/info/libgomp.info.gz 
-
-ifneq (,$(filter gdc, $(packages)))
-	: # gdc
-	dh_installdirs -pgdc \
-	  usr/share/doc usr/bin usr/share/man/man1
-	dh_installdocs -pgdc debian/README.Debian
-
-	# gdc binaries
-	dh_link -pgdc \
-		/usr/bin/gdc-$(PV_GDC) /usr/bin/gdc \
-		/usr/bin/gdc-$(PV_GDC) /usr/bin/$(DEB_HOST_GNU_TYPE)-gdc-$(PV_GDC) \
-		/usr/bin/gdc-$(PV_GDC) /usr/bin/$(DEB_HOST_GNU_TYPE)-gdc
-	# gdmd binaries
-	dh_link -pgdc \
-		/usr/bin/gdmd-$(PV_GDC) /usr/bin/gdmd \
-		/usr/bin/gdmd-$(PV_GDC) /usr/bin/$(DEB_HOST_GNU_TYPE)-gdmd-$(PV_GDC) \
-		/usr/bin/gdmd-$(PV_GDC) /usr/bin/$(DEB_HOST_GNU_TYPE)-gdmd
-	# manpages
-	dh_link -pgdc \
-		/usr/share/man/man1/gdc-$(PV_GDC).1.gz /usr/share/man/man1/gdc.1.gz \
-		/usr/share/man/man1/gdc-$(PV_GDC).1.gz /usr/share/man/man1/$(DEB_HOST_GNU_TYPE)-gdc.1.gz \
-		/usr/share/man/man1/gdmd-$(PV_GDC).1.gz /usr/share/man/man1/gdmd.1.gz \
-		/usr/share/man/man1/gdmd-$(PV_GDC).1.gz /usr/share/man/man1/$(DEB_HOST_GNU_TYPE)-gdmd.1.gz
-endif
 
 ifneq (,$(filter gobjc, $(packages)))
 	: # gobjc
@@ -683,7 +644,7 @@ binary-arch: build install
 	dh_testroot
 #	dh_installdebconf
 	dh_installdocs -pcpp
-	for p in `dh_listpackages $(nopkgs) -Ncpp -Nlibgcj-bc -Ncpp-doc -Ngcc-doc -Ngfortran-doc -Nlibgcj-common -Ngdc`; do \
+	for p in `dh_listpackages $(nopkgs) -Ncpp -Nlibgcj-bc -Ncpp-doc -Ngcc-doc -Ngfortran-doc -Nlibgcj-common`; do \
 	  case "$$p" in gij|gcj-*) t=libgcj-common;; *) t=cpp; esac; \
 	  echo ln -sf $$t debian/$$p/usr/share/doc/$$p; \
 	  mkdir -p debian/$$p/usr/share/doc; \
@@ -691,11 +652,9 @@ binary-arch: build install
 	  ln -sf $$t debian/$$p/usr/share/doc/$$p; \
 	done
 
-	dh_installchangelogs -pcpp -pgdc
+	dh_installchangelogs -pcpp
 	mv debian/cpp/usr/share/doc/cpp/changelog \
 		debian/cpp/usr/share/doc/cpp/changelog.Debian
-	mv debian/gdc/usr/share/doc/gdc/changelog \
-		debian/gdc/usr/share/doc/gdc/changelog.Debian
 
 	dh_installdocs -pcpp-doc -pgcc-doc -pgfortran-doc
 	dh_installchangelogs -pcpp-doc -pgcc-doc -pgfortran-doc
@@ -709,9 +668,6 @@ binary-arch: build install
 	dh_gencontrol -pcpp-doc -u-v$(EPOCH):$(CV_CPP)
 	dh_gencontrol -pgcc-doc -u-v$(EPOCH):$(CV_GCC)
 
-ifneq (,$(filter gdc, $(packages)))
-	dh_gencontrol -pgdc -u-v$(CV_GDC)
-endif
 ifneq (,$(filter g++, $(packages)))
 	dh_gencontrol -pg++     -u-v$(EPOCH):$(CV_GPP)
 endif
