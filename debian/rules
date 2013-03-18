@@ -535,7 +535,7 @@ binary-indep: build cacerts-stamp install
 
 	dh_compress -i -XREADME.Debian
 	dh_fixperms -i
-	dh_pycentral -plibgcj-common
+	dh_python2 -plibgcj-common
 	dh_installdeb -i
 	dh_gencontrol -plibgcj-common -u-v$(CV_LIBGCJCOMMON)
 	dh_md5sums -i
