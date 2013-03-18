@@ -188,11 +188,6 @@ ifneq (,$(filter $(DEB_HOST_ARCH), $(multilib_archs)))
   with_multilib = yes
 endif
 
-with_gfdl_docs := no
-ifeq ($(distribution),Ubuntu)
-  with_gfdl_docs := yes
-endif
-
 java_no_archs := arm 
 ifneq (,$(filter $(DEB_HOST_ARCH),$(java_no_archs)))
   no_packages += gcj gij libgcj-bc gcj-jre-headless gcj-jre gcj-jdk
@@ -222,10 +217,6 @@ endif
 
 ifeq (,$(filter $(DEB_HOST_ARCH),powerpc ppc64))
     no_packages += gcc-spu g++-spu gfortran-spu
-endif
-
-ifneq ($(with_gfdl_docs),yes)
-    no_packages := $(sort $(no_packages) cpp-doc gcc-doc gfortran-doc)
 endif
 
 packages := $(filter-out $(no_packages), $(all_packages))
@@ -275,7 +266,7 @@ README:
 	   -DV_GPC=$(V_GPC)     -DPV_GPC=$(PV_GPC) \
 	   -DV_GDC=$(V_GDC)     -DPV_GDC=$(PV_GDC) \
 	   -DV_SPU=$(V_SPU)     -DPV_SPU=$(PV_SPU) \
-	   $(if $(filter yes,$(with_gfdl_docs)), -DGFDL) \
+	   -DGFDL \
 		debian/README.Debian.m4 > debian/README.Debian.tmp2
 	uniq debian/README.Debian.tmp2 > debian/README.Debian.tmp
 	rm -f debian/README.Debian.tmp2
@@ -360,7 +351,6 @@ clean:
 	rm -f debian/control.tmp*
 	rm -f debian/substvars.local
 	rm -f debian/lib*gcj-bc.shlibs
-	rm -f debian/gcc.postinst debian/g++.postinst debian/gfortran.postinst
 	rm -f debian/generate-cacerts.pl
 	rm -f debian/dh_nativejava.1
 	dh_clean
@@ -382,7 +372,6 @@ install: build substvars
 	  /usr/bin/cpp-$(PV_CPP) /usr/bin/cpp \
 	  /usr/bin/cpp-$(PV_CPP) /usr/bin/$(DEB_HOST_GNU_TYPE)-cpp
 
-  ifeq ($(with_gfdl_docs),yes)
 	for i in gfdl.7 gpl.7 fsf-funding.7; do \
 	  cp -p $$i debian/cpp/usr/share/man/man7/$${i}gcc; \
 	done
@@ -398,7 +387,6 @@ install: build substvars
 	  /usr/share/doc/gcc-$(PV_CPP)-base/cppinternals.html /usr/share/doc/cpp-doc/cppinternals.html \
 	  /usr/share/info/cpp-$(PV_CPP).info.gz /usr/share/info/cpp.info.gz \
 	  /usr/share/info/cppinternals-$(PV_CPP).info.gz /usr/share/info/cppinternals.info.gz
-  endif
 
 	: # gcc
 	dh_installdirs -pgcc usr/bin usr/share/man/man1 usr/share/doc
@@ -420,10 +408,6 @@ endif
 	install -m 644 -p c99.1 debian/gcc/usr/share/man/man1/c99-gcc.1
 	sed 's/@VER@/$(PV_GCC)/g' c99.1 > debian/gcc/usr/share/man/man1/c99-gcc.1
 
-	sed -e 's/@GFDL@/$(if $(filter-out yes,$(with_gfdl_docs)),\#)/g' \
-		debian/gcc.postinst.in > debian/gcc.postinst
-
-  ifeq ($(with_gfdl_docs),yes)
 	dh_link -pgcc \
 	  /usr/share/man/man1/gcc-$(PV_GCC).1.gz /usr/share/man/man1/gcc.1.gz \
 	  /usr/share/man/man1/gcc-$(PV_GCC).1.gz /usr/share/man/man1/$(DEB_HOST_GNU_TYPE)-gcc.1.gz \
@@ -439,7 +423,6 @@ endif
 	  /usr/share/info/gcc-$(PV_GCC).info.gz /usr/share/info/gcc.info.gz \
 	  /usr/share/info/gccint-$(PV_GCC).info.gz /usr/share/info/gccint.info.gz \
 	  /usr/share/info/libgomp-$(PV_GCC).info.gz /usr/share/info/libgomp.info.gz 
-  endif
 
 ifneq (,$(filter gdc, $(packages)))
 	: # gdc
@@ -490,13 +473,9 @@ ifneq (,$(filter g++, $(packages)))
 	rm -f debian/g++/usr/bin/g++
 	$(CC) -DGPP_NAME=g++-$(PV_GPP) -O2 -Wall sparc-g++.c -o debian/g++/usr/bin/g++
   endif
-  ifeq ($(with_gfdl_docs),yes)
 	dh_link -pg++ \
 	  /usr/share/man/man1/g++-$(PV_GPP).1.gz /usr/share/man/man1/g++.1.gz \
 	  /usr/share/man/man1/g++-$(PV_GPP).1.gz /usr/share/man/man1/$(DEB_HOST_GNU_TYPE)-g++.1.gz
-  endif
-	sed -e 's/@GFDL@/$(if $(filter-out yes,$(with_gfdl_docs)),\#)/g' \
-		debian/g++.postinst.in > debian/g++.postinst
 endif
 
 ifneq (,$(filter gfortran, $(packages)))
@@ -521,7 +500,6 @@ ifneq (,$(filter $(DEB_HOST_ARCH), alpha))
   endif
 endif
 
-  ifeq ($(with_gfdl_docs),yes)
 	dh_link -pgfortran \
 	  /usr/share/man/man1/gfortran-$(PV_GFORT).1.gz /usr/share/man/man1/gfortran.1.gz \
 	  /usr/share/man/man1/gfortran-$(PV_GFORT).1.gz /usr/share/man/man1/$(DEB_HOST_GNU_TYPE)-gfortran.1.gz
@@ -533,9 +511,6 @@ endif
 	  /usr/share/doc/gcc-$(PV_GFORT)-base/fortran/gfortran.html \
 	    /usr/share/doc/gfortran-doc/fortran/gfortran.html \
 	  /usr/share/info/gfortran-$(PV_GFORT).info.gz /usr/share/info/gfortran.info.gz
-  endif
-	sed -e 's/@GFDL@/$(if $(filter-out yes,$(with_gfdl_docs)),\#)/g' \
-		debian/gfortran.postinst.in > debian/gfortran.postinst
 endif
 
 ifneq (,$(filter gcj, $(packages)))
@@ -585,7 +560,6 @@ ifneq (,$(filter gcj, $(packages)))
 	  /usr/share/man/man1/gtnameserv-$(PV_GCJ).1.gz /usr/share/man/man1/gtnameserv.1.gz \
 	  /usr/share/man/man1/gappletviewer-$(PV_GCJ).1.gz /usr/share/man/man1/gappletviewer.1.gz
 
-  ifeq ($(with_gfdl_docs),yes)
 	dh_link -pgcj-jre-headless \
 	  /usr/share/man/man1/gij-$(PV_GIJ).1.gz /usr/share/man/man1/gij.1.gz \
 	  /usr/share/man/man1/gcj-dbtool-$(PV_GIJ).1.gz /usr/share/man/man1/gcj-dbtool.1.gz
@@ -598,7 +572,6 @@ ifneq (,$(filter gcj, $(packages)))
 	  /usr/share/man/man1/jcf-dump-$(PV_GCJ).1.gz /usr/share/man/man1/jcf-dump.1.gz \
 	  /usr/share/man/man1/gcj-wrapper-$(PV_GCJ).1.gz /usr/share/man/man1/gcj-wrapper.1.gz \
 	  /usr/share/info/gcj-$(PV_GCJ).info.gz /usr/share/info/gcj.info.gz
-  endif
 
 #  ifneq (,$(filter $(DEB_HOST_ARCH), $(gcj44_archs)))
 	dh_link -pgcj-jdk \
@@ -792,10 +765,10 @@ ifneq (,$(filter gpc, $(packages)))
 	mv debian/gpc-doc/usr/share/doc/gpc-doc/changelog \
 		debian/gpc-doc/usr/share/doc/gpc-doc/changelog.Debian
 endif
-ifeq ($(with_gfdl_docs),yes)
+
 	dh_installdocs -pcpp-doc -pgcc-doc -pgfortran-doc
 	dh_installchangelogs -pcpp-doc -pgcc-doc -pgfortran-doc
-endif
+
 	dh_compress -s $(nopkgs) -XREADME.Debian
 	dh_fixperms -s $(nopkgs)
 	dh_installdeb -s $(nopkgs)
@@ -804,10 +777,10 @@ endif
   ifeq ($(with_multilib),yes)
 	dh_gencontrol -pgcc-multilib -u-v$(EPOCH):$(CV_GCC)
   endif
-  ifeq ($(with_gfdl_docs),yes)
+
 	dh_gencontrol -pcpp-doc -u-v$(EPOCH):$(CV_CPP)
 	dh_gencontrol -pgcc-doc -u-v$(EPOCH):$(CV_GCC)
-  endif
+
 ifneq (,$(filter gdc, $(packages)))
 	dh_gencontrol -pgdc -u-v$(CV_GDC)
 endif
@@ -834,9 +807,9 @@ ifneq (,$(filter gfortran, $(packages)))
   ifeq ($(with_multilib),yes)
 	dh_gencontrol -pgfortran-multilib -u-v$(EPOCH):$(CV_GFORT)
   endif
-  ifeq ($(with_gfdl_docs),yes)
+
 	dh_gencontrol -pgfortran-doc -u-v$(EPOCH):$(CV_GFORT)
-  endif
+
 endif
 ifneq (,$(filter gpc, $(packages)))
 	dh_gencontrol -pgpc     -u-v$(EPOCH_GPC):$(CV_GPC)
