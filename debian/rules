@@ -10,148 +10,46 @@ VMAJOR	:= $(shell echo $(VDEF) | awk -F. '{print $$1}')
 VMINOR	:= $(shell echo $(VDEF) | awk -F. '{print $$2}' | sed -e 's/\([0-9]*\).*/\1/')
 REL_EXT	:= $(shell echo $(VDEF) | sed -e 's/^$(VMAJOR)\.$(VMINOR)//')
 
-# gcc-defaults 0.8 is the first version for 2.95.4.
-REL_NO_295	:= $(shell expr $(VMINOR) + 15)$(REL_EXT)
-# gcc-defaults 0.6 is the first version with 2.96 support.
-REL_NO_296	:= $(shell expr $(VMINOR) + 17)$(REL_EXT)
-# gcc-defaults 0.17 is the first version with 3.0.4 support.
-REL_NO_30	:= $(shell expr $(VMINOR) + 6)$(REL_EXT)
-# gcc-defaults 1.0 is the first version with 3.1 support.
-REL_NO_31	:= $(shell expr $(VMINOR) + 1)$(REL_EXT)
-# gcc-defaults 1.2 is the first version with 3.2 support.
-REL_NO_32	:= $(shell expr $(VMINOR) - 1)$(REL_EXT)
-# gcc-defaults 1.3 is the first version with 3.2.2 support.
-REL_NO_322	:= $(shell expr $(VMINOR) - 3)$(REL_EXT)
-# gcc-defaults 1.4 is the first version with 3.2.3 support.
-REL_NO_323	:= $(shell expr $(VMINOR) - 4)$(REL_EXT)
-# gcc-defaults 1.5 is the first version with 3.3 support.
-REL_NO_33	:= $(shell expr $(VMINOR) - 5)$(REL_EXT)
-# gcc-defaults 1.7 is the first version with 3.3.1 support.
-REL_NO_331	:= $(shell expr $(VMINOR) - 7)$(REL_EXT)
-# gcc-defaults 1.10 is the first version with 3.3.2 support.
-REL_NO_332	:= $(shell expr $(VMINOR) - 9)$(REL_EXT)
-# gcc-defaults 1.13 is the first version with 3.3.3 support.
-REL_NO_333	:= $(shell expr $(VMINOR) - 12)$(REL_EXT)
-# gcc-defaults 1.16 is the first version with 3.3.4 support.
-REL_NO_334	:= $(shell expr $(VMINOR) - 15)$(REL_EXT)
-# gcc-defaults 1.19 is the first version with 3.3.5 support.
-REL_NO_335	:= $(shell expr $(VMINOR) - 18)$(REL_EXT)
-# gcc-defaults 1.22 is the first version with 3.3.6 support.
-REL_NO_336     := $(shell expr $(VMINOR) - 21)$(REL_EXT)
-
-# gcc-defaults 1.22 is the first version with 3.4.3 support.
-REL_NO_343	:= $(shell expr $(VMINOR) - 21)$(REL_EXT)
-# gcc-defaults 1.23 is the first version with 3.4.4 support.
-REL_NO_344	:= $(shell expr $(VMINOR) - 23)$(REL_EXT)
-# gcc-defaults 1.30 is the first version with 3.4.5 support.
-REL_NO_345	:= $(shell expr $(VMINOR) - 29)$(REL_EXT)
-# gcc-defaults 1.32 is the first version with 3.4.5 support.
-REL_NO_346	:= $(shell expr $(VMINOR) - 31)$(REL_EXT)
-
-# gcc-defaults 1.23 is the first version with 4.0.0 support.
-REL_NO_400	:= $(shell expr $(VMINOR) - 22)$(REL_EXT)
-# gcc-defaults 1.26 is the first version with 4.0.1 support.
-REL_NO_401	:= $(shell expr $(VMINOR) - 25)$(REL_EXT)
-# gcc-defaults 1.29 is the first version with 4.0.2 support.
-REL_NO_402	:= $(shell expr $(VMINOR) - 28)$(REL_EXT)
-# gcc-defaults 1.32 is the first version with 4.0.3 support.
-REL_NO_403	:= $(shell expr $(VMINOR) - 31)$(REL_EXT)
-
-# gcc-defaults 1.33 is the first version with 4.1.0 support.
-REL_NO_410	:= $(shell expr $(VMINOR) - 33)$(REL_EXT)
-# gcc-defaults 1.36 is the first version with 4.1.1 support.
-REL_NO_411	:= $(shell expr $(VMINOR) - 35)$(REL_EXT)
-# gcc-defaults 1.51 is the first version with 4.1.2 support.
-REL_NO_412	:= $(shell expr $(VMINOR) - 50)$(REL_EXT)
-
-# gcc-defaults 1.54 is the first version with 4.2.0 support.
-REL_NO_420	:= $(shell expr $(VMINOR) - 54)$(REL_EXT)
-# gcc-defaults 1.56 is the first version with 4.2.1 support.
-REL_NO_421	:= $(shell expr $(VMINOR) - 55)$(REL_EXT)
-# gcc-defaults 1.62 is the first version with 4.2.2 support.
-REL_NO_422	:= $(shell expr $(VMINOR) - 61)$(REL_EXT)
-# gcc-defaults 1.63 is the first version with 4.2.3 support.
-REL_NO_423	:= $(shell expr $(VMINOR) - 62)$(REL_EXT)
-# gcc-defaults 1.73 is the first version with 4.2.4 support.
-REL_NO_424	:= $(shell expr $(VMINOR) - 72)$(REL_EXT)
-
-# gcc-defaults 1.63 is the first version with 4.3 support.
-REL_NO_43	:= $(shell expr $(VMINOR) - 62)$(REL_EXT)
-# gcc-defaults 1.66 is the first version with 4.3 support.
-REL_NO_430	:= $(shell expr $(VMINOR) - 65)$(REL_EXT)
-# gcc-defaults 1.74 is the first version with 4.3.1 support.
-REL_NO_431	:= $(shell expr $(VMINOR) - 73)$(REL_EXT)
-# gcc-defaults 1.76 is the first version with 4.3.2 support.
-REL_NO_432	:= $(shell expr $(VMINOR) - 75)$(REL_EXT)
-# gcc-defaults 1.79 is the first version with 4.3.3 support.
-REL_NO_433	:= $(shell expr $(VMINOR) - 78)$(REL_EXT)
-# gcc-defaults 1.88 is the first version with 4.3.4 support.
-REL_NO_434	:= $(shell expr $(VMINOR) - 87)$(REL_EXT)
-# gcc-defaults 1.81 is the first version with 4.4.0 support.
-REL_NO_440	:= $(shell expr $(VMINOR) - 80)$(REL_EXT)
-# gcc-defaults 1.88 is the first version with 4.4.1 support.
-REL_NO_441	:= $(shell expr $(VMINOR) - 87)$(REL_EXT)
-# gcc-defaults 1.90 is the first version with 4.4.2 support.
-REL_NO_442	:= $(shell expr $(VMINOR) - 89)$(REL_EXT)
-# gcc-defaults 1.93 is the first version with 4.4.3 support.
-REL_NO_443	:= $(shell expr $(VMINOR) - 92)$(REL_EXT)
-# gcc-defaults 1.93 is the first version with 4.4.4 support.
-REL_NO_444	:= $(shell expr $(VMINOR) - 92)$(REL_EXT)
-
 # minimum required gcc-X.Y versions
-REQV_295	:= (>= 1:2.95.4-16)
-REQV_296	:= 
-REQV_30		:= (>= 1:3.0.4-12)
-REQV_32		:= (>= 1:3.2.3-1)
-REQV_33		:= (>= 1:3.3.6-1)
-REQV_34		:= (>= 3.4.6-1)
-REQV_40		:= (>= 4.0.3-1)
-REQV_41		:= (>= 4.1.2-1)
-REQV_41_GCJ	:= (>= 4.1.2-1)
-REQV_42		:= (>= 4.2.4-1)
-REQV_42_GCJ	:= (>= 4.2.4-1)
-REQV_43		:= (>= 4.3.4-1)
-REQV_44		:= (>= 4.4.4-1)
-
-REQV_LIBGCJ_BC	:= (>= 4.4.4-1)
+REQV_45        := (>= 4.5.1~)
+REQV_LIBGCJ_BC := $(REQV_45)
 
 # architecture dependent variables
 DEB_HOST_ARCH		:= $(shell dpkg-architecture -qDEB_HOST_ARCH)
 DEB_HOST_GNU_TYPE	:= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 
-# gcj-4.4 has some regressions in the testsuite compared to 4.3
-gcj44_archs = armel
+# THIS_RELEASE should end up like 4.5.1-1genesi1 or similar
+THIS_RELEASE	:= 4.5.1$(REL_EXT)
 
 # CV_XXX is the complete version number, including the release, without epoch
-CV_CPP		:= 4.4.4-$(REL_NO_444)
-CV_GCC		:= 4.4.4-$(REL_NO_444)
-CV_GPP		:= 4.4.4-$(REL_NO_444)
-CV_GOBJC	:= 4.4.4-$(REL_NO_444)
-CV_GOBJCXX	:= 4.4.4-$(REL_NO_444)
-CV_GFORT	:= 4.4.4-$(REL_NO_444)
-CV_GCJ		:= 4.4.4-$(REL_NO_444)
-CV_GIJ		:= 4.4.4-$(REL_NO_444)
-CV_LIBGCJBC	:= 4.4.4-$(REL_NO_444)
-CV_LIBGCJCOMMON	:= 1:4.4.4-$(REL_NO_444)
+CV_CPP		:= $(THIS_RELEASE)
+CV_GCC		:= $(THIS_RELEASE)
+CV_GPP		:= $(THIS_RELEASE)
+CV_GOBJC	:= $(THIS_RELEASE)
+CV_GOBJCXX	:= $(THIS_RELEASE)
+CV_GFORT	:= $(THIS_RELEASE)
+CV_GCJ		:= $(THIS_RELEASE)
+CV_GIJ		:= $(THIS_RELEASE)
+CV_LIBGCJBC	:= $(THIS_RELEASE)
+CV_LIBGCJCOMMON := 1:$(THIS_RELEASE)
 
-REQV_CPP	= $(REQV_44)
-REQV_GCC	= $(REQV_44)
-REQV_GPP	= $(REQV_44)
-REQV_GOBJC	= $(REQV_44)
-REQV_GOBJCXX	= $(REQV_44)
-REQV_GFORT	= $(REQV_44)
-REQV_GCJ	= $(REQV_44)
-REQV_GIJ	= $(REQV_44)
+REQV_CPP	= $(REQV_45)
+REQV_GCC	= $(REQV_45)
+REQV_GPP	= $(REQV_45)
+REQV_GOBJC	= $(REQV_45)
+REQV_GOBJCXX	= $(REQV_45)
+REQV_GFORT	= $(REQV_45)
+REQV_GCJ	= $(REQV_45)
+REQV_GIJ	= $(REQV_45)
 
 EPOCH=4
 OS_NAME	:= Linux
 distribution := $(shell lsb_release -is)
 all_packages    := g++ gfortran gcj gobjc gobjc++
-no_packages	:=
 
-LIBGCJ	= libgcj10
-LIBGCJ_PC	= libgcj10.pc
-LIBGCJ_SONAME	= 10
+LIBGCJ_SONAME = 11
+LIBGCJ = libgcj$(LIBGCJ_SONAME)
+LIBGCJ_PC = libgcj$(LIBGCJ_SONAME).pc
 
 gcj_archs = armel
 gcj_native_archs = armel
@@ -167,10 +65,6 @@ V_GOBJCXX	:= $(shell echo $(CV_GOBJCXX) | sed 's/-[^-]*$$//')
 V_GFORT	:= $(shell echo $(CV_GFORT) | sed 's/-[^-]*$$//')
 V_GCJ	:= $(shell echo $(CV_GCJ)   | sed 's/-[^-]*$$//')
 V_GIJ	:= $(shell echo $(CV_GIJ)   | sed 's/-[^-]*$$//')
-ifneq (,$(CV_GCJ_HACKED))
-  V_GCJ	:= $(shell echo $(CV_GCJ_HACKED)   | sed 's/-[^-]*$$//')
-  V_GIJ	:= $(shell echo $(CV_GIJ_HACKED)   | sed 's/-[^-]*$$//')
-endif
 
 # number for the package name
 PV_CPP	:= $(shell echo $(V_CPP)   | awk -F. '{printf "%d.%d", $$1, $$2}')
@@ -515,7 +409,7 @@ cacerts-stamp:
 	dh_testdir
 	rm -rf build
 	mkdir -p build
-	sed 's/@gcc_suffix@//' debian/generate-cacerts.pl.in \
+	sed 's/@gcc_suffix@/-$(PV_GCC)/' debian/generate-cacerts.pl.in \
 		> debian/generate-cacerts.pl
 	cd build && perl ../debian/generate-cacerts.pl \
 		/etc/ssl/certs/ca-certificates.crt
@@ -528,7 +422,7 @@ binary-indep: build cacerts-stamp install
 
 	dh_installdocs -plibgcj-common
 	dh_installchangelogs -plibgcj-common
-	mv debian/libgcj-common/usr/share/doc/libgcj-common/changelog \
+	-mv debian/libgcj-common/usr/share/doc/libgcj-common/changelog \
 		debian/libgcj-common/usr/share/doc/libgcj-common/changelog.Debian
 
 	install -m644 build/cacerts debian/libgcj-common/etc/java/cacerts-gcj
@@ -555,7 +449,7 @@ binary-arch: build install
 	done
 
 	dh_installchangelogs -pcpp
-	mv debian/cpp/usr/share/doc/cpp/changelog \
+	-mv debian/cpp/usr/share/doc/cpp/changelog \
 		debian/cpp/usr/share/doc/cpp/changelog.Debian
 
 	dh_installdocs -pcpp-doc -pgcc-doc -pgfortran-doc
