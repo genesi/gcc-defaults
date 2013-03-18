@@ -182,11 +182,6 @@ LIBGCJ_SONAME	= 10
 
 gcj_archs = alpha amd64 armel hppa i386 ia64 lpia m68k mips mipsel powerpc ppc64 s390 sh4 sparc kfreebsd-amd64 kfreebsd-i386 hurd-i386
 gcj_native_archs = alpha amd64 armel hppa i386 ia64 lpia mips mipsel powerpc ppc64 s390 sh4 sparc kfreebsd-amd64 kfreebsd-i386 hurd-i386
-multilib_archs = amd64 i386 kfreebsd-amd64 mips mipsel powerpc ppc64 s390 sparc
-
-ifneq (,$(filter $(DEB_HOST_ARCH), $(multilib_archs)))
-  with_multilib = yes
-endif
 
 java_no_archs := arm 
 ifneq (,$(filter $(DEB_HOST_ARCH),$(java_no_archs)))
@@ -312,15 +307,6 @@ substvars:
 	  echo 'pkg:libgcjawt=$(LIBGCJ)-awt'; \
 	  echo 'version:libgcjbc=$(CV_LIBGCJBC)'; \
 	) > debian/substvars.local
-ifeq ($(with_multilib),yes)
-	( \
-	  echo 'pkgmulti:gcc=gcc-multilib'; \
-	  echo 'pkgmulti:gpp=g++-multilib'; \
-	  echo 'pkgmulti:gobjc=gobjc-multilib'; \
-	  echo 'pkgmulti:gobjcxx=gobjc++-multilib'; \
-	  echo 'pkgmulti:gfort=gfortran-multilib'; \
-	) >> debian/substvars.local
-endif
 #ifneq (,$(filter $(DEB_HOST_ARCH), $(gcj44_archs)))
 	( \
 	  echo 'dep:jrehl=gcj-$${pv:gij}-jre-headless $${reqv:gij}'; \
@@ -493,10 +479,6 @@ ifneq (,$(filter $(DEB_HOST_ARCH), alpha))
 	  /usr/lib/gcc/$(DEB_HOST_GNU_TYPE)/4.3/libgfortran.a /usr/lib/libgfortran.a \
 	  /usr/lib/gcc/$(DEB_HOST_GNU_TYPE)/4.3/libgfortranbegin.a /usr/lib/libgfortranbegin.a
   ifneq (,$(filter $(DEB_HOST_ARCH), amd64))
-	dh_link -pgfortran-multilib \
-	  /usr/lib/gcc/$(DEB_HOST_GNU_TYPE)/4.3/32/libgfortran.so $(lib32)/libgfortran.so \
-	  /usr/lib/gcc/$(DEB_HOST_GNU_TYPE)/4.3/32/libgfortran.a $(lib32)/libgfortran.a \
-	  /usr/lib/gcc/$(DEB_HOST_GNU_TYPE)/4.3/32/libgfortranbegin.a $(lib32)/libgfortranbegin.a
   endif
 endif
 
@@ -774,9 +756,6 @@ endif
 	dh_installdeb -s $(nopkgs)
 	dh_gencontrol -pcpp     -u-v$(EPOCH):$(CV_CPP)
 	dh_gencontrol -pgcc     -u-v$(EPOCH):$(CV_GCC)
-  ifeq ($(with_multilib),yes)
-	dh_gencontrol -pgcc-multilib -u-v$(EPOCH):$(CV_GCC)
-  endif
 
 	dh_gencontrol -pcpp-doc -u-v$(EPOCH):$(CV_CPP)
 	dh_gencontrol -pgcc-doc -u-v$(EPOCH):$(CV_GCC)
@@ -786,27 +765,15 @@ ifneq (,$(filter gdc, $(packages)))
 endif
 ifneq (,$(filter g++, $(packages)))
 	dh_gencontrol -pg++     -u-v$(EPOCH):$(CV_GPP)
-  ifeq ($(with_multilib),yes)
-	dh_gencontrol -pg++-multilib -u-v$(EPOCH):$(CV_GPP)
-  endif
 endif
 ifneq (,$(filter gobjc, $(packages)))
 	dh_gencontrol -pgobjc   -u-v$(EPOCH):$(CV_GOBJC)
-  ifeq ($(with_multilib),yes)
-	dh_gencontrol -pgobjc-multilib -u-v$(EPOCH):$(CV_GOBJC)
-  endif
 endif
 ifneq (,$(filter gobjc++, $(packages)))
 	dh_gencontrol -pgobjc++   -u-v$(EPOCH):$(CV_GOBJCXX)
-  ifeq ($(with_multilib),yes)
-	dh_gencontrol -pgobjc++-multilib -u-v$(EPOCH):$(CV_GOBJCXX)
-  endif
 endif
 ifneq (,$(filter gfortran, $(packages)))
 	dh_gencontrol -pgfortran     -u-v$(EPOCH):$(CV_GFORT)
-  ifeq ($(with_multilib),yes)
-	dh_gencontrol -pgfortran-multilib -u-v$(EPOCH):$(CV_GFORT)
-  endif
 
 	dh_gencontrol -pgfortran-doc -u-v$(EPOCH):$(CV_GFORT)
 

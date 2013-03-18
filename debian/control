@@ -35,16 +35,6 @@ Description: The GNU C++ compiler
  .
  This is a dependency package providing the default GNU C++ compiler.
 
-Package: g++-multilib
-Priority: optional
-Architecture: amd64 i386 kfreebsd-amd64 mips mipsel powerpc ppc64 s390 sparc
-Depends: cpp (>= ${version:cpp}), g++ (>= ${version:cpp}), g++-${pv:gpp}-multilib ${reqv:gpp}, ${misc:Depends}
-Description: The GNU C++ compiler (multilib files)
- This is the GNU C++ compiler, a fairly portable optimizing compiler for C++.
- .
- On architectures with multilib support, the package contains dependencies
- for the non-default multilib architecture(s).
-
 Package: gobjc
 Priority: optional
 Architecture: any
@@ -57,17 +47,6 @@ Description: The GNU Objective-C compiler
  code.
  .
  This is a dependency package providing the default GNU Objective-C compiler.
-
-Package: gobjc-multilib
-Priority: optional
-Architecture: amd64 i386 kfreebsd-amd64 mips mipsel powerpc ppc64 s390 sparc
-Depends: cpp (>= ${version:cpp}), gobjc (>= ${version:gcc}), gobjc-${pv:gobjc}-multilib ${reqv:gobjc}, ${misc:Depends}
-Description: The GNU Objective-C compiler (multilib files)
- This is the GNU Objective-C compiler, which compiles Objective-C on
- platforms supported by the gcc compiler.
- .
- On architectures with multilib support, the package contains dependencies
- for the non-default multilib architecture(s).
 
 Package: gobjc++
 Priority: optional
@@ -83,17 +62,6 @@ Description: The GNU Objective-C++ compiler
  .
  This is a dependency package providing the default GNU Objective-C++ compiler.
 
-Package: gobjc++-multilib
-Priority: optional
-Architecture: amd64 i386 kfreebsd-amd64 mips mipsel powerpc ppc64 s390 sparc
-Depends: cpp (>= ${version:cpp}), gobjc++ (>= ${version:gcc}), gobjc++-${pv:gobjcxx}-multilib ${reqv:gobjcxx}, ${misc:Depends}
-Description: The GNU Objective-C++ compiler (multilib files)
- This is the GNU Objective-C++ compiler, which compiles Objective-C++ on
- platforms supported by the gcc compiler.
- .
- On architectures with multilib support, the package contains dependencies
- for the non-default multilib architecture(s).
-
 Package: gfortran
 Priority: optional
 Architecture: any
@@ -106,17 +74,6 @@ Description: The GNU Fortran 95 compiler
  code.
  .
  This is a dependency package providing the default GNU Fortran 95 compiler.
-
-Package: gfortran-multilib
-Priority: optional
-Architecture: amd64 i386 kfreebsd-amd64 mips mipsel powerpc ppc64 s390 sparc
-Depends: cpp (>= ${version:cpp}), gfortran (>= ${version:gcc}), gfortran-${pv:gfort}-multilib ${reqv:gfort}, ${misc:Depends}
-Description: The GNU Fortran 95 compiler (multilib files)
- This is the GNU Fortran compiler, which compiles Fortran 95 on platforms
- supported by the gcc compiler.
- .
- On architectures with multilib support, the package contains dependencies
- for the non-default multilib architecture(s).
 
 Package: libgcj-common
 Section: java
@@ -238,23 +195,13 @@ Priority: optional
 Architecture: any
 Depends: cpp (>= ${version:cpp}), gcc-${pv:gcc} ${reqv:gcc}, ${misc:Depends}
 Recommends: libc6-dev | libc-dev
-Suggests: gcc-multilib, make, manpages-dev, autoconf, automake1.9, libtool, flex, bison, gdb, gcc-doc
+Suggests: make, manpages-dev, autoconf, automake1.9, libtool, flex, bison, gdb, gcc-doc
 Provides: c-compiler
 Conflicts: gcc-doc (<< 1:2.95.3)
 Description: The GNU C compiler
  This is the GNU C compiler, a fairly portable optimizing compiler for C.
  .
  This is a dependency package providing the default GNU C compiler.
-
-Package: gcc-multilib
-Priority: optional
-Architecture: amd64 i386 kfreebsd-amd64 mips mipsel powerpc ppc64 s390 sparc
-Depends: cpp (>= ${version:cpp}), gcc (>= ${version:gcc}), gcc-${pv:gcc}-multilib ${reqv:gcc}, ${misc:Depends}
-Description: The GNU C compiler (multilib files)
- This is the GNU C compiler, a fairly portable optimizing compiler for C.
- .
- On architectures with multilib support, the package contains dependencies
- for the non-default multilib architecture(s).
 
 Package: gpc-doc
 Section: doc
