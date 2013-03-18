@@ -259,7 +259,7 @@ clean:
 install: build substvars
 	dh_testdir
 	dh_testroot
-	dh_clean -k
+	dh_prep
 
 	for p in `dh_listpackages`; do \
 	  cp -l debian/substvars.local debian/$$p.substvars; \
