@@ -120,8 +120,7 @@ DEB_HOST_ARCH		:= $(shell dpkg-architecture -qDEB_HOST_ARCH)
 DEB_HOST_GNU_TYPE	:= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 
 # gcj-4.4 has some regressions in the testsuite compared to 4.3
-# results on alpha are bad in both 4.3 and 4.4.
-gcj44_archs = amd64 armel hppa hurd-i386 i386 lpia mips mipsel powerpc ppc64 kfreebsd-amd64 kfreebsd-i386 sh4
+gcj44_archs = armel
 
 # CV_XXX is the complete version number, including the release, without epoch
 CV_CPP		:= 4.4.4-$(REL_NO_444)
@@ -134,13 +133,6 @@ CV_GCJ		:= 4.4.4-$(REL_NO_444)
 CV_GIJ		:= 4.4.4-$(REL_NO_444)
 CV_LIBGCJBC	:= 4.4.4-$(REL_NO_444)
 CV_LIBGCJCOMMON	:= 1:4.4.4-$(REL_NO_444)
-CV_SPU		:= 4.4.4-$(REL_NO_444)
-
-#ifneq (,$(filter $(DEB_HOST_ARCH), $(gcj44_archs)))
-#  CV_GCJ		:= 4.4.4-$(REL_NO_444)
-#  CV_GIJ		:= 4.4.4-$(REL_NO_444)
-#  CV_LIBGCJBC		:= 4.4.4-$(REL_NO_444)
-#endif
 
 REQV_CPP	= $(REQV_44)
 REQV_GCC	= $(REQV_44)
@@ -150,44 +142,19 @@ REQV_GOBJCXX	= $(REQV_44)
 REQV_GFORT	= $(REQV_44)
 REQV_GCJ	= $(REQV_44)
 REQV_GIJ	= $(REQV_44)
-REQV_SPU	= $(REQV_44)
 
 EPOCH=4
 OS_NAME	:= Linux
 distribution := $(shell lsb_release -is)
 all_packages    := g++ gfortran gcj gobjc gobjc++
-all_packages	+= gcc-spu g++-spu gfortran-spu
 no_packages	:=
-
-lib32 = /usr/lib32
 
 LIBGCJ	= libgcj10
 LIBGCJ_PC	= libgcj10.pc
 LIBGCJ_SONAME	= 10
 
-gcj_archs = alpha amd64 armel hppa i386 ia64 lpia m68k mips mipsel powerpc ppc64 s390 sh4 sparc kfreebsd-amd64 kfreebsd-i386 hurd-i386
-gcj_native_archs = alpha amd64 armel hppa i386 ia64 lpia mips mipsel powerpc ppc64 s390 sh4 sparc kfreebsd-amd64 kfreebsd-i386 hurd-i386
-
-java_no_archs := arm 
-ifneq (,$(filter $(DEB_HOST_ARCH),$(java_no_archs)))
-  no_packages += gcj gij libgcj-bc gcj-jre-headless gcj-jre gcj-jdk
-endif
-
-ifeq ($(DEB_HOST_ARCH),hurd-i386)
-    OS_NAME	:= Hurd
-endif
-
-ifneq (,$(filter $(DEB_HOST_ARCH),kfreebsd-i386 kfreebsd-amd64))
-    OS_NAME	:= kFreeBSD
-endif
-
-ifeq ($(DEB_HOST_ARCH),netbsd-i386)
-    OS_NAME	:= NetBSD
-endif
-
-ifeq (,$(filter $(DEB_HOST_ARCH),powerpc ppc64))
-    no_packages += gcc-spu g++-spu gfortran-spu
-endif
+gcj_archs = armel
+gcj_native_archs = armel
 
 packages := $(filter-out $(no_packages), $(all_packages))
 
@@ -204,7 +171,6 @@ ifneq (,$(CV_GCJ_HACKED))
   V_GCJ	:= $(shell echo $(CV_GCJ_HACKED)   | sed 's/-[^-]*$$//')
   V_GIJ	:= $(shell echo $(CV_GIJ_HACKED)   | sed 's/-[^-]*$$//')
 endif
-V_SPU	:= $(shell echo $(CV_SPU)   | sed 's/-[^-]*$$//')
 
 # number for the package name
 PV_CPP	:= $(shell echo $(V_CPP)   | awk -F. '{printf "%d.%d", $$1, $$2}')
@@ -215,7 +181,6 @@ PV_GOBJCXX:= $(shell echo $(V_GOBJCXX) | awk -F. '{printf "%d.%d", $$1, $$2}')
 PV_GFORT:= $(shell echo $(V_GFORT) | awk -F. '{printf "%d.%d", $$1, $$2}')
 PV_GCJ	:= $(shell echo $(V_GCJ)   | awk -F. '{printf "%d.%d", $$1, $$2}')
 PV_GIJ	:= $(shell echo $(V_GIJ)   | awk -F. '{printf "%d.%d", $$1, $$2}')
-PV_SPU	:= $(shell echo $(V_SPU)   | awk -F. '{printf "%d.%d", $$1, $$2}')
 
 README:
 	m4 -DPACKAGES="$(packages)" \
@@ -229,7 +194,6 @@ README:
 	   -DV_GFORT=$(V_GFORT) -DPV_GFORT=$(PV_GFORT) \
 	   -DV_GCJ=$(V_GCJ)     -DPV_GCJ=$(PV_GCJ) \
 	   -DV_GIJ=$(V_GIJ)     -DPV_GIJ=$(PV_GIJ) \
-	   -DV_SPU=$(V_SPU)     -DPV_SPU=$(PV_SPU) \
 	   -DGFDL \
 		debian/README.Debian.m4 > debian/README.Debian.tmp2
 	uniq debian/README.Debian.tmp2 > debian/README.Debian.tmp
@@ -257,7 +221,6 @@ substvars:
 	  echo 'pv:gfort=$(PV_GFORT)'; \
 	  echo 'pv:gcj=$(PV_GCJ)'; \
 	  echo 'pv:gij=$(PV_GIJ)'; \
-	  echo 'pv:spu=$(PV_SPU)'; \
 	  echo 'reqv:cpp=$(REQV_CPP)'; \
 	  echo 'reqv:gcc=$(REQV_GCC)'; \
 	  echo 'reqv:gpp=$(REQV_GPP)'; \
@@ -266,27 +229,15 @@ substvars:
 	  echo 'reqv:gfort=$(REQV_GFORT)'; \
 	  echo 'reqv:gcj=$(REQV_GCJ)'; \
 	  echo 'reqv:gij=$(REQV_GIJ)'; \
-	  echo 'reqv:spu=$(REQV_SPU)'; \
 	  echo 'pkg:libgcj=$(LIBGCJ)'; \
 	  echo 'pkg:libgcjawt=$(LIBGCJ)-awt'; \
 	  echo 'version:libgcjbc=$(CV_LIBGCJBC)'; \
-	) > debian/substvars.local
-#ifneq (,$(filter $(DEB_HOST_ARCH), $(gcj44_archs)))
-	( \
 	  echo 'dep:jrehl=gcj-$${pv:gij}-jre-headless $${reqv:gij}'; \
 	  echo 'dep:jre=gcj-$${pv:gij}-jre $${reqv:gij}'; \
 	  echo 'dep:jdk=gcj-$${pv:gcj}-jdk $${reqv:gcj}'; \
 	  echo 'pkg:gjdoc=gjdoc'; \
 	  echo 'ver:gcjconflict=4:4.4.0-2'; \
-	) >> debian/substvars.local
-#else
-#	( \
-#	  echo 'dep:jrehl=java-gcj-compat-headless (>= 1.0.80), gij-$${pv:gij} $${reqv:gij}'; \
-#	  echo 'dep:jre=java-gcj-compat (>= 1.0.80)'; \
-#	  echo 'dep:jdk=java-gcj-compat-dev (>= 1.0.80), gcj-$${pv:gcj} $${reqv:gcj}'; \
-#	  echo 'ver:gcjconflict=4:4.3.3-6'; \
-#	) >> debian/substvars.local
-#endif
+	) > debian/substvars.local
 
 build: README build-stamp
 build-stamp:
@@ -346,12 +297,7 @@ install: build substvars
 	  /usr/bin/gcc-$(PV_GCC) /usr/bin/$(DEB_HOST_GNU_TYPE)-gcc \
 	  /usr/bin/gcov-$(PV_GCC) /usr/bin/gcov \
 	  /usr/share/doc/gcc-$(PV_GCC)/README.Bugs /usr/share/doc/cpp/README.Bugs
-ifeq ($(DEB_HOST_ARCH),sparc)
-	rm -f debian/gcc/usr/bin/gcc
-	$(CC) -DGCC_NAME=gcc-$(PV_GCC) -O2 -Wall sparc-gcc.c -o debian/gcc/usr/bin/gcc
-	mkdir -p debian/gcc/etc
-	cp -p debian/disable_64_gcc debian/gcc/etc/.
-endif
+
 	install -m 755 -p c89 debian/gcc/usr/bin/c89-gcc
 	install -m 644 -p c89.1 debian/gcc/usr/share/man/man1/c89-gcc.1
 	install -m 755 -p c99 debian/gcc/usr/bin/c99-gcc
@@ -395,10 +341,6 @@ ifneq (,$(filter g++, $(packages)))
 	  /usr/share/doc/cpp /usr/share/doc/g++ \
 	  /usr/bin/g++-$(PV_GPP) /usr/bin/g++ \
 	  /usr/bin/g++-$(PV_GPP) /usr/bin/$(DEB_HOST_GNU_TYPE)-g++
-  ifeq ($(DEB_HOST_ARCH),sparc)
-	rm -f debian/g++/usr/bin/g++
-	$(CC) -DGPP_NAME=g++-$(PV_GPP) -O2 -Wall sparc-g++.c -o debian/g++/usr/bin/g++
-  endif
 	dh_link -pg++ \
 	  /usr/share/man/man1/g++-$(PV_GPP).1.gz /usr/share/man/man1/g++.1.gz \
 	  /usr/share/man/man1/g++-$(PV_GPP).1.gz /usr/share/man/man1/$(DEB_HOST_GNU_TYPE)-g++.1.gz
@@ -411,16 +353,6 @@ ifneq (,$(filter gfortran, $(packages)))
 	  /usr/share/doc/cpp /usr/share/doc/gfortran \
 	  /usr/bin/gfortran-$(PV_GFORT) /usr/bin/gfortran \
 	  /usr/bin/gfortran-$(PV_GFORT) /usr/bin/$(DEB_HOST_GNU_TYPE)-gfortran
-
-ifneq (,$(filter $(DEB_HOST_ARCH), alpha))
-	: # keep these as long as gcc version != gfortran version
-	dh_link -pgfortran \
-	  /usr/lib/gcc/$(DEB_HOST_GNU_TYPE)/4.3/libgfortran.so /usr/lib/libgfortran.so \
-	  /usr/lib/gcc/$(DEB_HOST_GNU_TYPE)/4.3/libgfortran.a /usr/lib/libgfortran.a \
-	  /usr/lib/gcc/$(DEB_HOST_GNU_TYPE)/4.3/libgfortranbegin.a /usr/lib/libgfortranbegin.a
-  ifneq (,$(filter $(DEB_HOST_ARCH), amd64))
-  endif
-endif
 
 	dh_link -pgfortran \
 	  /usr/share/man/man1/gfortran-$(PV_GFORT).1.gz /usr/share/man/man1/gfortran.1.gz \
@@ -495,14 +427,12 @@ ifneq (,$(filter gcj, $(packages)))
 	  /usr/share/man/man1/gcj-wrapper-$(PV_GCJ).1.gz /usr/share/man/man1/gcj-wrapper.1.gz \
 	  /usr/share/info/gcj-$(PV_GCJ).info.gz /usr/share/info/gcj.info.gz
 
-#  ifneq (,$(filter $(DEB_HOST_ARCH), $(gcj44_archs)))
 	dh_link -pgcj-jdk \
 	  /usr/bin/gjdoc-$(PV_GCJ) /usr/bin/gjdoc \
 	  /usr/share/man/man1/gjdoc-$(PV_GCJ).1.gz /usr/share/man/man1/gjdoc.1.gz
 	cp -p debian/dh_javadoc debian/gcj-jdk/usr/bin/
 	pod2man -c Debhelper -r $(PV_GCJ) \
 		debian/dh_javadoc debian/gcj-jdk/usr/share/man/man1/dh_javadoc.1
-# endif
 
 	: # libgcj-bc
 	dh_installdirs -plibgcj-bc \
@@ -520,7 +450,6 @@ ifneq (,$(filter gcj, $(packages)))
 		> debian/libgcj-bc.shlibs
 #	echo "libgcj_bc 1 libgcj-bc" > debian/libgcj-bc.shlibs
 
-#  ifneq (,$(filter $(DEB_HOST_ARCH), $(gcj44_archs)))
 	: # gcj-jre-headless
 	dh_installdirs -pgcj-jre-headless \
 		usr/share/doc usr/lib/jvm
@@ -530,7 +459,6 @@ ifneq (,$(filter gcj, $(packages)))
 		debian/gcj-jre-headless/usr/lib/jvm/java-1.5.0-gcj
 	ln -sf java-gcj-$(PV_GCJ) \
 		debian/gcj-jre-headless/usr/lib/jvm/java-gcj
-#  endif
 endif
 
 	: # libgcj-common
@@ -580,32 +508,6 @@ endif
 	pod2man -c Debhelper debian/dh_nativejava debian/dh_nativejava.1
 	mkdir -p debian/libgcj-common/usr/share/man/man1
 	install -m644 debian/dh_nativejava.1 debian/libgcj-common/usr/share/man/man1/
-
-ifneq (,$(filter gcc-spu, $(packages)))
-	: # gcc-spu
-	dh_installdirs -pgcc-spu \
-	  usr/share/doc usr/bin
-
-	dh_link -pgcc-spu \
-		/usr/bin/spu-cpp-$(PV_SPU) /usr/bin/spu-cpp \
-		/usr/bin/spu-gcc-$(PV_SPU) /usr/bin/spu-gcc
-endif
-ifneq (,$(filter g++-spu, $(packages)))
-	: # g++-spu
-	dh_installdirs -pg++-spu \
-	  usr/share/doc usr/bin
-
-	dh_link -pg++-spu \
-		/usr/bin/spu-g++-$(PV_SPU) /usr/bin/spu-g++
-endif
-ifneq (,$(filter gfortran-spu, $(packages)))
-	: # gfortran-spu
-	dh_installdirs -pgfortran-spu \
-	  usr/share/doc usr/bin
-
-	dh_link -pgfortran-spu \
-		/usr/bin/spu-gfortran-$(PV_SPU) /usr/bin/spu-gfortran
-endif
 
 nopkgs :=-s $(foreach p, $(no_packages),-N$(p))
 
@@ -690,15 +592,6 @@ ifneq (,$(filter gcj, $(packages)))
 
 	dh_gencontrol -pgcj-jre-headless -pgcj-jre -pgcj-jdk \
 		-u-v$(EPOCH):$(CV_GCJ)
-endif
-ifneq (,$(filter gcc-spu, $(packages)))
-	dh_gencontrol -pgcc-spu -u-v$(CV_SPU)
-endif
-ifneq (,$(filter g++-spu, $(packages)))
-	dh_gencontrol -pg++-spu -u-v$(CV_SPU)
-endif
-ifneq (,$(filter gfortran-spu, $(packages)))
-	dh_gencontrol -pgfortran-spu -u-v$(CV_SPU)
 endif
 	dh_md5sums -s $(nopkgs)
 	dh_builddeb -s $(nopkgs)

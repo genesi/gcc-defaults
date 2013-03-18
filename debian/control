@@ -4,7 +4,7 @@ Priority: standard
 Maintainer: Debian GCC Maintainers <debian-gcc@lists.debian.org>
 Uploaders: Matthias Klose <doko@debian.org>, Arthur Loiret <aloiret@debian.org>
 Standards-Version: 3.8.4
-Build-Depends: m4, debhelper (>= 5), dpkg-dev (>= 1.13.9), gcj-4.4-base (>= 4.4.2-2) [!arm], gcc-4.4-base (>= 4.4.3~), lsb-release
+Build-Depends: m4, debhelper (>= 5), dpkg-dev (>= 1.13.9), gcj-4.4-base (>= 4.4.2-2), gcc-4.4-base (>= 4.4.3~), lsb-release
 Build-Depends-Indep: ca-certificates, gcj-jdk, python, python-central
 XS-Python-Version: all
 
@@ -185,31 +185,6 @@ Description: The GNU C compiler
  This is the GNU C compiler, a fairly portable optimizing compiler for C.
  .
  This is a dependency package providing the default GNU C compiler.
-
-Package: gcc-spu
-Architecture: powerpc ppc64
-Section: devel
-Priority: optional
-Depends: cpp (>= ${version:cpp}), gcc-${pv:spu}-spu ${reqv:spu}, ${misc:Depends}
-Description: SPU cross-compiler (preprocessor and C compiler)
- GNU Compiler Collection for the Cell Broadband Engine SPU (preprocessor
- and C compiler).
-
-Package: g++-spu
-Architecture: powerpc ppc64
-Section: devel
-Priority: optional
-Depends: cpp (>= ${version:cpp}), g++-${pv:spu}-spu ${reqv:spu}, ${misc:Depends}
-Description: SPU cross-compiler (C++ compiler)
- GNU Compiler Collection for the Cell Broadband Engine SPU (C++ compiler).
-
-Package: gfortran-spu
-Architecture: powerpc ppc64
-Section: devel
-Priority: optional
-Depends: cpp (>= ${version:cpp}), gfortran-${pv:spu}-spu ${reqv:spu}, ${misc:Depends}
-Description: SPU cross-compiler (Fortran compiler)
- GNU Compiler Collection for the Cell Broadband Engine SPU (Fortran compiler).
 
 Package: cpp-doc
 Section: doc
