@@ -1,3 +1,10 @@
+gcc-defaults (4.5-1genesi1) maverick; urgency=low
+
+  * Bump version to give clear difference between this and the
+    Ubuntu/Debian upstream.
+
+ -- Matt Sealey <matt@genesi-usa.com>  Tue, 19 Mar 2013 09:23:12 -0600
+
 gcc-defaults (1.94-1genesi1) maverick; urgency=low
 
   * Bump dependencies to 4.5.1.
